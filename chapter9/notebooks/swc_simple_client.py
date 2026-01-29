@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 @backoff.on_exception(
     wait_gen=backoff.expo,
-    exception=(httpsx.RequestError, httpx.HTTPStatusError),
+    exception=(httpx.RequestError, httpx.HTTPStatusError),
     max_time=5,
     jitter=backoff.random_jitter
 )
