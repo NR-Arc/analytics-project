@@ -26,12 +26,19 @@ def call_api_endpoint(
 ) -> httpx.Response:
 
     try:
-        with httpx.Client(base_url=base_url, follow_redirects=True) as client:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "application/json",
+        }
+        with httpx.Client(base_url=base_url, follow_redirects=True, headers=headers) as client:
             logger.debug(f"base_url: {base_url}, api_endpoint: {api_endpoint}")
             response = client.get(api_endpoint, params=api_params)
             if response.status_code >= 400:
                 response.raise_for_status()
-            logger.debug(f"Response JSON: {response.json()}")
+            try:
+                logger.debug(f"Response JSON: {response.json()}")
+            except Exception:
+                logger.debug(f"Response text: {response.text}")
             return response
     except httpx.HTTPStatusError as e:
         logger.error(f"Request error occurred: {str(e)}")
@@ -40,5 +47,6 @@ def call_api_endpoint(
         logger.error(f"Request error occurred: {str(e)}")
         return httpx.Response(status_code=500, content=b"Network error")
     except Exception as e:
-        logger.error(f"Unexpected error occurred: {str(e)}")
+        logger.error(f"Unexpected error occurred: {str(e)}", exc_info=True)
+        print(f"DEBUG: Exception type: {type(e)}, Message: {str(e)}")
         return httpx.Response(status_code=500, content=b"Unexpected error")
