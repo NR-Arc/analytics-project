@@ -23,13 +23,14 @@ def call_api_endpoint(
     base_url: str,
     api_endpoint: str,
     api_params: dict = None
-) -> httpx.response:
+) -> httpx.Response:
 
     try:
-        with httpx.Client(base_url=base_url) as client:
+        with httpx.Client(base_url=base_url, follow_redirects=True) as client:
             logger.debug(f"base_url: {base_url}, api_endpoint: {api_endpoint}")
             response = client.get(api_endpoint, params=api_params)
-            response.raise_for_status()
+            if response.status_code >= 400:
+                response.raise_for_status()
             logger.debug(f"Response JSON: {response.json()}")
             return response
     except httpx.HTTPStatusError as e:
