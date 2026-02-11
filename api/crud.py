@@ -71,3 +71,7 @@ def get_league_count(db: Session):
 def get_week_count(db: Session):
     query = db.query(models.Week)
     return query.count()
+
+def get_week_count(db: Session):
+    query = db.query(models.Week)
+    return query.count()
