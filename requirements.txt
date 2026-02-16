@@ -1,11 +1,10 @@
 fastapi
 sqlalchemy
 pydantic
-airflow
 pandas
 streamlit
 pytest
 httpx
 backoff
 matplotlib
-nfl_data_py
+nfl-data-py
